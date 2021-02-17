@@ -1,0 +1,16 @@
+
+0x4020a4dc in operator new(unsigned int) at ??:?
+0x402088fc in AsyncWebServer::on(char const*, unsigned char, std::function<void (AsyncWebServerRequest*)>) at ??:?
+0x4020337b in serve_configuration_page() at ??:?
+0x40100c26 in malloc at ??:?
+0x40209244 in Print::println() at ??:?
+0x40203394 in serve_configuration_page() at ??:?
+0x402031a8 in std::_Function_base::_Base_manager<serve_configuration_page()::{lambda(AsyncWebServerRequest*)#1}>::_M_manager(std::_Any_data&, std::_Function_base::_Base_manager<serve_configuration_page()::{lambda(AsyncWebServerRequest*)#1}> const&, std::_Manager_operation) at espWebServer.cpp:?
+0x40203218 in std::_Function_handler<void (AsyncWebServerRequest*), serve_configuration_page()::{lambda(AsyncWebServerRequest*)#1}>::_M_invoke(std::_Any_data const&, AsyncWebServerRequest*) at espWebServer.cpp:?
+0x4010546d in ets_timer_arm_new at ??:?
+0x40100340 in millis at ??:?
+0x402033c8 in webserver_loop() at ??:?
+0x40203612 in loop at ??:?
+0x40100248 in ets_post at ??:?
+0x4020a774 in loop_wrapper() at core_esp8266_main.cpp:?
+0x40100ee9 in cont_wrapper at ??:?
