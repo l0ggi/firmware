@@ -35,6 +35,7 @@ void webserver_setup(void)
     }
     server.on("/store", HTTP_POST, handle_save_credits);
     server.on("/", HTTP_GET, handle_webserver_request);
+    server.on("/setup", HTTP_GET, handle_webserver_setup);
     server.onNotFound(handle_webserver_request); // handles when not connected to a wifi the settings page, otherwise returns the last sampled json
     server.begin();
 }
@@ -115,6 +116,11 @@ void handle_webserver_request(void)
     }
 }
 
+void handle_webserver_setup(void)
+{
+    server.send(200, "text/html", captive_portal);
+}
+
 bool enable_wifi_ap(void)
 {
     WiFi.mode(WIFI_AP);
@@ -189,11 +195,11 @@ String build_value_json_string(void)
     humid.toCharArray(curHumid, sizeof("00"));
 
 #ifdef DEBUG_VIA_SERIAL
-        Serial.print(F("DEBUG | WiFi | Sending Vals: Temp: "));
-        Serial.print(temp);
-        Serial.print(" Humid: ");
-        Serial.println(humid);
-        
+    Serial.print(F("DEBUG | WiFi | Sending Vals: Temp: "));
+    Serial.print(temp);
+    Serial.print(" Humid: ");
+    Serial.println(humid);
+
 #endif
 
     String values = "{";

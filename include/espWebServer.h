@@ -29,6 +29,7 @@ String webserver_local_ip(void);
 // webserver parts
 void handle_save_credits(void);
 void handle_webserver_request(void);
+void handle_webserver_setup(void);
 String build_value_json_string(void);
 
 #endif

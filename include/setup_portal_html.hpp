@@ -6,13 +6,39 @@ const char captive_portal[] PROGMEM = R"(<!DOCTYPE HTML>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <style>
-      button{width:11em;height:2.5em}
-      body{background: #87cefa; text-align: center;}
+      button{
+          background-color: #4CAF50; /* Green */
+          border: none;
+          color: white;
+          padding: 15px 32px;
+          text-align: center;
+          text-decoration: none;
+          display: inline-block;
+          font-size: 16px;
+          box-shadow: 0 12px 16px 0 rgba(0,0,0,0.24), 0 17px 50px 0 rgba(0,0,0,0.19);
+        }
+      body{
+        background: #404040; 
+        text-align: center;
+        }
+      h2 {
+        color: #D3D3D3;
+      }
+      input {
+          width: 100%;
+          max-width: 25vw;
+          padding: 12px 20px;
+          margin: 8px 0;
+          display: inline-block;
+          border: 1px solid #ccc;
+          border-radius: 4px;
+          box-sizing: border-box;
+      }
     </style>
     <title>Wohoo! Time to set up your l0ggi</title>
   </head>
   <body>
-    <h2>Zugangsdaten</h2>
+    <h2>Please enter your WiFi Information</h2>
     <form>
       <p>
         <label>SSID:<br>
