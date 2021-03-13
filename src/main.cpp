@@ -112,6 +112,6 @@ void loop()
     delay(100 - (millis() - ms_begin_loop));
   }
   add_to_time_struct(millis() - ms_begin_loop, &current_time);
-  webserver_loop(&current_values);
+  webserver_loop(current_values);
   ArduinoOTA.handle();
 }

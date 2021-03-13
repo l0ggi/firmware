@@ -1,7 +1,7 @@
 #include "espWebServer.h"
 #ifdef USE_WEB_SERVER
 
-#define IN_AP_MODE !(WiFi.status() != WL_CONNECTED)
+#define IN_AP_MODE (WiFi.status() != WL_CONNECTED)
 
 //#define FORMAT_LITTLEFS
 boolean ap_running = false;
@@ -16,10 +16,10 @@ IPAddress AP_IP(WIFI_AP_IP);
 IPAddress GW_IP(192, 168, 0, 1);
 IPAddress SUBNET(255, 255, 255, 0);
 
-read_values *current_values_ptr; // pointer to the current stored value field
+read_values current_values_esp;
 
-char *ssid = "";
-char *password = "";
+String ssid = "";
+String password = "";
 uint8_t connection_error = 0; // 0 => no error, 1 => error, not configured, 2 => wrong ssid (can not be found), 3 => wrong password, 4 => auth problem
 
 void webserver_setup(void)
@@ -34,15 +34,23 @@ void webserver_setup(void)
         dns_setup();
     }
     server.on("/store", HTTP_POST, handle_save_credits);
+    server.on("/", HTTP_GET, handle_webserver_request);
     server.onNotFound(handle_webserver_request); // handles when not connected to a wifi the settings page, otherwise returns the last sampled json
+    server.begin();
 }
-void webserver_loop(read_values *current_values)
+
+void webserver_loop(read_values current_values)
 {
-    current_values_ptr = current_values;
+    current_values_esp = current_values;
     if (IN_AP_MODE)
     { // these parts are only needed if the webserver runs in AP mode
         dns_loop();
     }
+    else
+    {
+        dns_halt();
+    }
+    server.handleClient();
 }
 
 void dns_setup(void)
@@ -55,12 +63,35 @@ void dns_loop(void)
     dnsServer.processNextRequest();
 }
 
+void dns_halt(void)
+{
+    dnsServer.stop();
+}
+
 void handle_save_credits(void)
 {
     if (server.hasArg("WIFI_SSID") && server.hasArg("WIFI_PW"))
     {
-        strcpy(ssid, server.arg(0).c_str());
-        strcpy(password, server.arg(1).c_str());
+#ifdef DEBUG_VIA_SERIAL
+        Serial.println(F("DEBUG | WEBSERVER | Saving Credits: "));
+#endif
+        ssid = server.arg("WIFI_SSID");
+        password = server.arg("WIFI_PW");
+#ifdef DEBUG_VIA_SERIAL
+        Serial.print(F("SSID: "));
+        Serial.print(ssid);
+        Serial.print(F("PW: "));
+        Serial.println(password);
+        Serial.print(F("Plain request: "));
+        Serial.println(server.arg("plain"));
+        String message = "Arguments: ";
+        for (uint8_t i = 0; i < server.args(); i++)
+        {
+            message += " " + server.argName(i) + ": " + server.arg(i) + "\n";
+            Serial.println(message);
+        }
+
+#endif
         server.send(200, "text/plain", ANSWER_GOT_CREDITS);
         connect_to_wifi(true, true);
     }
@@ -70,21 +101,30 @@ void handle_webserver_request(void)
 {
     if (IN_AP_MODE)
     {
+#ifdef DEBUG_VIA_SERIAL
+        Serial.println(F("DEBUG | WEBSERVER | Sending captive setup portal"));
+#endif
         server.send(200, "text/html", captive_portal);
     }
     else
     {
-        server.send(404, "text/plain", "Not Found");
+#ifdef DEBUG_VIA_SERIAL
+        Serial.println(F("DEBUG | WEBSERVER | Regular handler"));
+#endif
+        server.send(200, "text/json", build_value_json_string());
     }
 }
 
 bool enable_wifi_ap(void)
 {
     WiFi.mode(WIFI_AP);
-    WiFi.softAPConfig(WIFI_AP_IP, IPAddress(0, 0, 0, 0), IPAddress(255, 255, 0, 0));
-
+    WiFi.softAPConfig(WIFI_AP_IP, WIFI_AP_GATEWAY, WIFI_AP_SUBNET);
     if (WiFi.softAP(WIFI_AP_NAME, WIFI_AP_PASS))
     {
+#ifdef DEBUG_VIA_SERIAL
+        Serial.print(F("DEBUG | SETUP WIFI AP | IP: "));
+        Serial.println(WiFi.softAPIP());
+#endif
         return true;
     }
     return false;
@@ -96,14 +136,29 @@ bool enable_wifi_ap(void)
 // @TODO: implement static IP handler
 bool connect_to_wifi(bool persistent, bool reset_on_fail)
 {
+#ifdef DEBUG_VIA_SERIAL
+    Serial.print(F("DEBUG | WIFI | Try to connect to wifi: "));
+    Serial.println(ssid);
+#endif
     WiFi.persistent(persistent);
     WiFi.mode(WIFI_STA);
-    WiFi.begin(ssid, password);
+    if (ssid != "")
+    {
+        WiFi.begin(ssid, password);
+    }
+    else
+    {
+        WiFi.begin();
+    }
 
     byte counter = 0;
     while (WiFi.status() != WL_CONNECTED)
     {
-        if (counter >= 9)
+#ifdef DEBUG_VIA_SERIAL
+        Serial.print(F("DEBUG | WiFi | Trying ... "));
+        Serial.println(counter);
+#endif
+        if (counter >= 15)
         {
             connection_error = 4;
             if (reset_on_fail)
@@ -118,6 +173,39 @@ bool connect_to_wifi(bool persistent, bool reset_on_fail)
     return true;
 }
 
+String build_value_json_string(void)
+{
+
+    /**
+     * Arduino has no float-functions in sprintf.. we need do build something on our own:
+     * */
+
+    String temp = String(current_values_esp.values.temperature, '\002');
+    String humid = String(current_values_esp.values.humidity, '\000');
+
+    char curTemp[sizeof("00.0")];
+    char curHumid[sizeof("00")];
+    temp.toCharArray(curTemp, sizeof("00.0"));
+    humid.toCharArray(curHumid, sizeof("00"));
+
+#ifdef DEBUG_VIA_SERIAL
+        Serial.print(F("DEBUG | WiFi | Sending Vals: Temp: "));
+        Serial.print(temp);
+        Serial.print(" Humid: ");
+        Serial.println(humid);
+        
+#endif
+
+    String values = "{";
+    values += "\"temperature\":";
+    values += temp;
+    values += ",\"humidity\":";
+    values += humid;
+    values += "}";
+    return values;
+}
+
+// BUG: if all 4x3 digits are used, the display overflows
 String webserver_local_ip(void)
 {
     IPAddress ip;
