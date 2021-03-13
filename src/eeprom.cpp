@@ -70,6 +70,8 @@ void read_fastcalls_from_eeprom(quickcall *quickcall_buttons)
 }
 
 #ifdef USE_WEB_SERVER
+ // No need to write them in the eeprom. we can use a macro for this
+/**
 void write_wifi_settings_to_eeprom(wifi_settings *settings)
 {
     Serial.println("DEBUG | EEPROM | Writing wifi settings to eeprom");
@@ -81,4 +83,6 @@ void read_wifi_settings_from_eeprom(wifi_settings *settings)
     Serial.println("DEBUG | EEPROM | Reading wifi settings from eeprom");
     EEPROM.get(EEPROM_ADDRESS_WIFI_SETTINGS, settings);
 }
+
+*/
 #endif

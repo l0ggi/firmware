@@ -10,7 +10,8 @@ void write_fastcalls_to_eeprom(quickcall *quickcall_buttons);
 void read_fastcalls_from_eeprom(quickcall *quickcall_buttons);
 
 #ifdef USE_WEB_SERVER
-void write_wifi_settings_to_eeprom(wifi_settings *settings);
-void read_wifi_settings_from_eeprom(wifi_settings *settings);
+// done by a esp macro
+//void write_wifi_settings_to_eeprom(wifi_settings *settings);
+//void read_wifi_settings_from_eeprom(wifi_settings *settings);
 #endif
 #endif // !eeprom_header

@@ -52,8 +52,6 @@
 
 // -----------------------------------------------------------------------------------------
 
-
-
 // Software Constants
 // -----------------------------------------------------------------------------------------
 #define loops_to_store 50 // loops until the current preset value is stored to a preset button
@@ -74,6 +72,7 @@
 #define EEPROM_ADDRESS_PRESET 0            // 2* 32bits (2*float ^= 2* 4byte)
 #define EEPROM_ADDRESS_QUICKCALL 0 + 4 + 4 // beginn, 8 bytes for preset, quickcall is 24 bytes large
 #ifdef USE_WEB_SERVER
-#define EEPROM_ADDRESS_WIFI_SETTINGS 0 + EEPROM_ADDRESS_QUICKCALL + 24 + 1 // add one byte offset, just in case..
+// esp has its own macro to save wifi information
+//#define EEPROM_ADDRESS_WIFI_SETTINGS 0 + EEPROM_ADDRESS_QUICKCALL + 24 + 1 // add one byte offset, just in case..
 #endif
 #endif // !config

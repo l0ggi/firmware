@@ -95,8 +95,13 @@ void loop()
     // read temp sensor (sampling rate is 0.5Hz, but don't care about the dropped sample)
     temp_sensor_read(&current_values, current_time);
     display_clear();
-    //display_print_time(current_time);
+
+#ifdef USE_WEB_SERVER
     display_print_ip(webserver_local_ip());
+#else
+    display_print_time(current_time);
+#endif
+
     display_print_temperature(current_values);
     display_push();
     lastSecs = current_time.seconds;
