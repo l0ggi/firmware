@@ -3,6 +3,7 @@
 #include "config.h"
 #include "constants.h"
 #include <SimpleDHT.h>
+#include <ArduinoOTA.h>
 #include "display.hpp"
 // firmware related internal uses
 unsigned long ms_begin_loop = 0;

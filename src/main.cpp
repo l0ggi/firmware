@@ -1,7 +1,5 @@
 /**
- * Arduino dough box
- * pi temp controller
- * fan controller
+ * l0ggi wifi data logger
  */
 #include <Arduino.h>
 #ifndef config
@@ -60,6 +58,8 @@ void setup()
 
 #ifdef USE_WEB_SERVER
   webserver_setup();
+  ArduinoOTA.onStart([]() {});
+  ArduinoOTA.begin();
 #endif
 }
 
@@ -112,5 +112,6 @@ void loop()
     delay(100 - (millis() - ms_begin_loop));
   }
   add_to_time_struct(millis() - ms_begin_loop, &current_time);
-  webserver_loop(current_values);
+  webserver_loop(&current_values);
+  ArduinoOTA.handle();
 }
