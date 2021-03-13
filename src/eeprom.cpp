@@ -28,11 +28,12 @@ void write_eeprom_initially(set_values *preset, quickcall *quickcall_buttons)
         write_fastcalls_to_eeprom(quickcall_buttons);
 
 #ifdef USE_WEB_SERVER
-        wifi_settings init_wifi_settings;
+      /**  wifi_settings init_wifi_settings;
         init_wifi_settings.configured = false;
         init_wifi_settings.ssid = "";
         init_wifi_settings.password = "";
         write_wifi_settings_to_eeprom(&init_wifi_settings);
+        */
 #endif
     }
 }
