@@ -16,7 +16,11 @@
 unsigned long ms_begin_loop = 0;
 time_struct current_time;
 read_values current_values;
+#ifdef USE_EEPROM
 set_values preset;
+#endif
+#ifdef HAS_BUTTONS
 quickcall quickcall_buttons;
+#endif
 
 #endif

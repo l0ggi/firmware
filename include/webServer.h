@@ -3,11 +3,12 @@
 
 #include "config.h"
 #include "constants.h"
-#ifdef USE_WEB_SERVER
 #include <Arduino.h>
+#ifdef USE_WEB_SERVER
 
 #if uController == ESP8266
 #include "espWifi.hpp"
+#include <ESP8266WebServer.h>
 // webserver parts
 void handle_save_credits(void);
 void handle_webserver_setup(void);

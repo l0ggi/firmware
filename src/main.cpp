@@ -27,6 +27,7 @@ void setup()
   current_values.values.temperature = 0;
   current_values.timestamp = current_time;
 
+#ifdef HAS_BUTTONS
 #ifdef DEBUG_VIA_SERIAL
   Serial.println(F("DEBUG | SETUP | Setting up ISR for Button 1"));
 #endif
@@ -40,12 +41,14 @@ void setup()
   // button down isr
   pinMode(BUTTON_DOWN, INPUT_PULLUP);
   attachInterrupt(digitalPinToInterrupt(BUTTON_DOWN), button_down_isr, INTERRUPT_TYPE);
-
+#endif
+#ifdef USE_EEPROM
   // check if its the first ever start and if write the eeprom initially
   write_eeprom_initially(&preset, &quickcall_buttons);
   // read last stored values from EEPROM
   read_preset_from_eeprom(&preset);
   read_fastcalls_from_eeprom(&quickcall_buttons);
+#endif
 
 #ifdef USE_WEB_SERVER
   webserver_setup();

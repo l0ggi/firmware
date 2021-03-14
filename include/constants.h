@@ -39,6 +39,7 @@ struct read_values
     time_struct timestamp;
 };
 
+#ifdef HAS_BUTTONS
 // save to eeprom as soon as set
 struct quickcall
 {
@@ -46,6 +47,7 @@ struct quickcall
     set_values button_2; // 8 byte
     set_values button_3; // 8 byte
 };
+#endif
 
 #ifdef USE_WEB_SERVER
 //wifi connection settings

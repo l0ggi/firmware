@@ -3,9 +3,15 @@
 #include <Arduino.h>
 #include <EEPROM.h>
 
+#ifdef USE_EEPROM
+
 // perform a first write to eeprom if the eeprom is empty. last eeprom is used to check if arduino hasn't been used before
 // note: ATMEGA 328p with 1024bytes of eeprom is used
+#ifdef HAS_BUTTONS
 void write_eeprom_initially(set_values *preset, quickcall *quickcall_buttons)
+#else
+void write_eeprom_initially(set_values *preset)
+#endif
 {
     byte last_byte_in_eeprom;
     EEPROM.get(1023, last_byte_in_eeprom);
@@ -25,7 +31,9 @@ void write_eeprom_initially(set_values *preset, quickcall *quickcall_buttons)
         quickcall_buttons->button_1 = (*preset);
         quickcall_buttons->button_2 = (*preset);
         quickcall_buttons->button_3 = (*preset);
+        #ifdef HAS_BUTTONS
         write_fastcalls_to_eeprom(quickcall_buttons);
+        #endif
 
 #ifdef USE_WEB_SERVER
       /**  wifi_settings init_wifi_settings;
@@ -86,4 +94,5 @@ void read_wifi_settings_from_eeprom(wifi_settings *settings)
 }
 
 */
+#endif
 #endif
