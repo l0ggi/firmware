@@ -1,8 +1,8 @@
 #include "config.h"
 
 #ifdef USE_WEB_SERVER
-#ifndef WEBSERVER_CONFIG_HEADER
-#define WEBSERVER_CONFIG_HEADER
+#ifndef WIFI_CONFIG_HEADER
+#define WIFI_CONFIG_HEADER
 
 #define WIFI_AP_NAME "l0ggi"
 #define WIFI_AP_PASS ""

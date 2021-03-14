@@ -15,10 +15,21 @@ struct time_struct
 };
 
 // save to eeprom after 2 minutes without changes
+// is named by the older codebase, firmware was originally developed for a pid regulator
 struct set_values
 {
-    float humidity; // 4 byte
+    float humidity;    // 4 byte
     float temperature; // 4 byte
+
+#ifdef HAS_LIGHT_SENSOR
+    float light; // 4 byte
+#endif
+#ifdef HAS_CO2_SENSOR
+    float co2; // 4 byte
+#endif
+#ifdef HAS_NOX_SENSOR
+    float nox; // 4 byte
+#endif
 };
 
 // stores the current values for humidity and temperature with their measured timestamp

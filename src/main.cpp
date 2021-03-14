@@ -2,16 +2,7 @@
  * l0ggi wifi data logger
  */
 #include <Arduino.h>
-#ifndef config
-#include "config.h"
-#endif // !config
-#include "time_t.hpp"
-#include "isr.hpp"
-#include "display.hpp"
-#include "eeprom.hpp"
 #include "main.hpp"
-#include "dht.hpp"
-#include "espWebServer.h"
 
 void setup()
 {
