@@ -1,4 +1,4 @@
-#include "dht.hpp"
+#include "sensors.hpp"
 #include <SimpleDHT.h>
 
 SimpleDHT22 temp_sensor(DHT_PIN);
