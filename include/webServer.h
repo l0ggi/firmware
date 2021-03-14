@@ -19,9 +19,15 @@ void handle_webserver_setup(void);
 void webserver_setup(void);
 void webserver_loop(read_values current_values);
 
-String webserver_local_ip(void);
-void handle_webserver_request(void);
 String build_value_json_string(void);
+String webserver_local_ip(void);
+String generate_uuid(void);
+
+void handle_webserver_request(void);
+void handle_webserver_register(void);
+void handle_webserver_setup(void);
+
+
 
 
 

@@ -3,6 +3,8 @@
 
 #define uController ESP8266
 
+#define BOARD_TYPE "basic_v100_2021-01-03"
+
 #define HEATBED 0 // pwm possible
 #define DHT_PIN 16
 #define FAN 1            // pwm possible

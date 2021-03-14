@@ -17,6 +17,7 @@ void webserver_setup(void)
     server.on("/store", HTTP_POST, handle_save_credits);
     server.on("/", HTTP_GET, handle_webserver_request);
     server.on("/setup", HTTP_GET, handle_webserver_setup);
+    server.on("/register", HTTP_GET, handle_webserver_register);
     server.onNotFound(handle_webserver_request); // handles when not connected to a wifi the settings page, otherwise returns the last sampled json
     server.begin();
 }
@@ -47,7 +48,7 @@ void handle_webserver_request(void)
     }
 }
 
-#ifdef uController == ESP8266
+#if uController == ESP8266
 void handle_save_credits(void)
 {
     if (server.hasArg("WIFI_SSID") && server.hasArg("WIFI_PW"))
@@ -147,6 +148,19 @@ String build_value_json_string(void)
     return values;
 }
 
+void handle_webserver_register(void)
+{
+    String json = "{\"uuid\":\"";
+    json += generate_uuid();
+    json += "\", \"type\": \"";
+    json += String(BOARD_TYPE);
+    json += "\", \"firmware\":\"";
+    json += String(GIT_VERSION); // ignore the underline, will be filled by platformio
+    json += "\"}";
+    
+    server.send(200, "text/json", json);
+}
+
 // BUG: if all 4x3 digits are used, the display overflows
 String webserver_local_ip(void)
 {
@@ -161,5 +175,18 @@ String webserver_local_ip(void)
     current += ".";
     current += current_ip[3];
     return current;
+}
+
+String generate_uuid(void)
+{
+    // typical UUID looks like c08e6b42-c23f-44e3-9957-c8ebc91dd942
+    String uuid;
+
+    for (uint8_t i = 0; i < 32; i++)
+    {
+        uuid += String(random(0, 16), HEX);
+    }
+
+    return uuid;
 }
 #endif
